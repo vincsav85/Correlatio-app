@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Correlatio — Sapere come sta andando la tua azienda, in 30 secondi.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sand:    #F5F0E8;
+    --sand2:   #EDE8DF;
+    --ink:     #1C1A17;
+    --ink2:    #2C2A27;
+    --muted:   #8A7F72;
+    --accent:  #4A6FA5;
+    --accent2: #7B7BA0;
+    --gold:    #C9A84C;
+    --border:  #D4C9B8;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Jost', sans-serif;
+    background: var(--sand);
+    color: var(--ink);
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE TEXTURE ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 60px;
+    background: rgba(245, 240, 232, 0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .nav-cta {
+    font-family: 'Jost', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    text-decoration: none;
+    border: 1px solid var(--accent);
+    padding: 8px 20px;
+    transition: all 0.2s;
+  }
+  .nav-cta:hover {
+    background: var(--accent);
+    color: white;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 120px 40px 80px;
+    position: relative;
+  }
+
+  .hero-eyebrow {
+    font-family: 'Jost', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 24px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.2s;
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(42px, 7vw, 84px);
+    font-weight: 300;
+    line-height: 1.1;
+    color: var(--ink);
+    max-width: 860px;
+    margin-bottom: 16px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.4s;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .hero-title .highlight {
+    position: relative;
+    display: inline-block;
+  }
+
+  .hero-title .highlight::after {
+    content: '';
+    position: absolute;
+    bottom: 4px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--gold);
+    opacity: 0;
+    animation: lineIn 0.6s ease forwards 1.2s;
+  }
+
+  .hero-sub {
+    font-family: 'Jost', sans-serif;
+    font-size: 17px;
+    font-weight: 300;
+    color: var(--muted);
+    max-width: 520px;
+    line-height: 1.7;
+    margin-bottom: 48px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.6s;
+  }
+
+  /* ── FORM ── */
+  .waitlist-form {
+    display: flex;
+    gap: 0;
+    max-width: 480px;
+    width: 100%;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.8s;
+    box-shadow: 0 4px 32px rgba(28, 26, 23, 0.08);
+  }
+
+  .waitlist-form input {
+    flex: 1;
+    padding: 16px 20px;
+    font-family: 'Jost', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    background: white;
+    border: 1px solid var(--border);
+    border-right: none;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .waitlist-form input::placeholder { color: var(--muted); }
+  .waitlist-form input:focus { border-color: var(--accent); }
+
+  .waitlist-form button {
+    padding: 16px 28px;
+    font-family: 'Jost', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    background: var(--accent);
+    color: white;
+    border: 1px solid var(--accent);
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .waitlist-form button:hover {
+    background: var(--ink);
+    border-color: var(--ink);
+  }
+
+  .form-note {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 12px;
+    letter-spacing: 0.04em;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 1s;
+  }
+
+  /* ── DIVISORE ── */
+  .divider {
+    width: 1px;
+    height: 80px;
+    background: linear-gradient(to bottom, transparent, var(--border), transparent);
+    margin: 60px auto;
+  }
+
+  /* ── PROBLEMA ── */
+  .section {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 80px 40px;
+  }
+
+  .section-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(28px, 4vw, 48px);
+    font-weight: 300;
+    line-height: 1.2;
+    color: var(--ink);
+    max-width: 700px;
+    margin-bottom: 20px;
+  }
+
+  .section-title em { font-style: italic; color: var(--accent); }
+
+  .section-body {
+    font-size: 16px;
+    font-weight: 300;
+    color: var(--muted);
+    line-height: 1.8;
+    max-width: 580px;
+  }
+
+  /* ── PROBLEMI GRID ── */
+  .problems {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-top: 60px;
+  }
+
+  .problem-card {
+    background: var(--sand);
+    padding: 40px 32px;
+    transition: background 0.2s;
+  }
+
+  .problem-card:hover { background: var(--sand2); }
+
+  .problem-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 48px;
+    font-weight: 300;
+    color: var(--border);
+    line-height: 1;
+    margin-bottom: 16px;
+  }
+
+  .problem-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 10px;
+  }
+
+  .problem-body {
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  /* ── SOLUZIONE ── */
+  .solution {
+    background: var(--ink);
+    padding: 100px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .solution::before {
+    content: 'C';
+    position: absolute;
+    right: -40px;
+    top: -60px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 400px;
+    font-weight: 300;
+    color: rgba(255,255,255,0.03);
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  .solution-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .solution .section-label { color: var(--gold); }
+
+  .solution .section-title {
+    color: white;
+    max-width: 600px;
+  }
+
+  .solution .section-title em { color: var(--gold); }
+
+  .features {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 40px;
+    margin-top: 60px;
+  }
+
+  .feature {
+    border-left: 1px solid rgba(255,255,255,0.1);
+    padding-left: 24px;
+  }
+
+  .feature-icon {
+    font-size: 20px;
+    margin-bottom: 12px;
+  }
+
+  .feature-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 8px;
+  }
+
+  .feature-body {
+    font-size: 14px;
+    font-weight: 300;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.7;
+  }
+
+  /* ── PRICING ── */
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-top: 60px;
+  }
+
+  .pricing-card {
+    background: var(--sand);
+    padding: 40px 32px;
+    position: relative;
+    transition: background 0.2s;
+  }
+
+  .pricing-card.featured {
+    background: var(--accent);
+  }
+
+  .pricing-card:hover:not(.featured) { background: var(--sand2); }
+
+  .pricing-badge {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+  }
+
+  .pricing-card.featured .pricing-badge { color: rgba(255,255,255,0.7); }
+
+  .pricing-plan {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+
+  .pricing-card.featured .pricing-plan { color: white; }
+
+  .pricing-price {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 48px;
+    font-weight: 300;
+    color: var(--ink);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .pricing-card.featured .pricing-price { color: white; }
+
+  .pricing-period {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 32px;
+  }
+
+  .pricing-card.featured .pricing-period { color: rgba(255,255,255,0.6); }
+
+  .pricing-features {
+    list-style: none;
+    margin-bottom: 32px;
+  }
+
+  .pricing-features li {
+    font-size: 13px;
+    font-weight: 300;
+    color: var(--muted);
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .pricing-card.featured .pricing-features li {
+    color: rgba(255,255,255,0.8);
+    border-bottom-color: rgba(255,255,255,0.15);
+  }
+
+  .pricing-features li::before {
+    content: '—';
+    color: var(--gold);
+    font-size: 12px;
+  }
+
+  .pricing-card.featured .pricing-features li::before {
+    color: rgba(255,255,255,0.5);
+  }
+
+  .pricing-btn {
+    display: block;
+    text-align: center;
+    padding: 14px;
+    font-family: 'Jost', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    transition: all 0.2s;
+    cursor: pointer;
+    background: none;
+    width: 100%;
+  }
+
+  .pricing-btn:hover {
+    background: var(--accent);
+    color: white;
+  }
+
+  .pricing-card.featured .pricing-btn {
+    background: white;
+    border-color: white;
+    color: var(--accent);
+  }
+
+  .pricing-card.featured .pricing-btn:hover {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: white;
+  }
+
+  /* ── CTA FINALE ── */
+  .cta-final {
+    background: var(--sand2);
+    border-top: 1px solid var(--border);
+    padding: 100px 40px;
+    text-align: center;
+  }
+
+  .cta-final .hero-title { margin: 0 auto 16px; }
+  .cta-final .hero-sub { margin: 0 auto 48px; }
+  .cta-final .waitlist-form { margin: 0 auto; }
+  .cta-final .form-note { opacity: 1; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--ink);
+    color: rgba(255,255,255,0.3);
+    text-align: center;
+    padding: 32px;
+    font-size: 12px;
+    font-weight: 300;
+    letter-spacing: 0.06em;
+  }
+
+  footer a {
+    color: rgba(255,255,255,0.5);
+    text-decoration: none;
+  }
+
+  /* ── ANIMAZIONI ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes lineIn {
+    from { opacity: 0; transform: scaleX(0); }
+    to   { opacity: 1; transform: scaleX(1); }
+  }
+
+  /* ── SCROLL REVEAL ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── SUCCESS STATE ── */
+  .success-msg {
+    display: none;
+    font-size: 14px;
+    color: #4CAF50;
+    margin-top: 12px;
+    font-weight: 400;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    nav { padding: 16px 24px; }
+    .hero { padding: 100px 24px 60px; }
+    .section { padding: 60px 24px; }
+    .problems { grid-template-columns: 1fr; }
+    .features { grid-template-columns: 1fr; }
+    .pricing-grid { grid-template-columns: 1fr; }
+    .waitlist-form { flex-direction: column; }
+    .waitlist-form input { border-right: 1px solid var(--border); border-bottom: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">CORRELATIO</a>
+  <a href="#waitlist" class="nav-cta">Entra in lista</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <p class="hero-eyebrow">Gestionale per ristoratori e PMI</p>
+  <h1 class="hero-title">
+    Sapere come sta andando<br>
+    la tua azienda,<br>
+    <em>in <span class="highlight">30 secondi</span>.</em>
+  </h1>
+  <p class="hero-sub">
+    Correlatio è il gestionale pensato per chi non vuole pensarci.<br>
+    Apri l'app. Il resto lo fa lui.
+  </p>
+
+  <form class="waitlist-form" id="waitlist" action="https://formspree.io/f/TUOID" method="POST">
+    <input type="email" name="email" placeholder="La tua email" required>
+    <button type="submit">Voglio provarlo</button>
+  </form>
+  <p class="form-note">Accesso anticipato gratuito · Nessuno spam · Disdici quando vuoi</p>
+  <p class="success-msg" id="success">✓ &nbsp;Perfetto! Ti contatteremo presto.</p>
+</section>
+
+<div class="divider"></div>
+
+<!-- PROBLEMA -->
+<section class="section">
+  <div class="reveal">
+    <p class="section-label">Il problema</p>
+    <h2 class="section-title">
+      Non sai come sta andando la tua azienda.<br>
+      <em>E lo scopri sempre troppo tardi.</em>
+    </h2>
+    <p class="section-body">
+      Il commercialista ti manda i dati ogni trimestre. Nel frattempo vai avanti a intuito. Scopri i problemi quando sono già diventati costosi.
+    </p>
+  </div>
+
+  <div class="problems reveal">
+    <div class="problem-card">
+      <div class="problem-num">01</div>
+      <div class="problem-title">I costi salgono in silenzio</div>
+      <div class="problem-body">Un fornitore aumenta i prezzi del 15%. Te ne accorgi tre mesi dopo, quando hai già pagato dodici fatture.</div>
+    </div>
+    <div class="problem-card">
+      <div class="problem-num">02</div>
+      <div class="problem-title">La liquidità ti sorprende</div>
+      <div class="problem-body">Hai fatturato bene questo mese, eppure il conto corrente non torna. Non sai dove sono finiti i soldi.</div>
+    </div>
+    <div class="problem-card">
+      <div class="problem-num">03</div>
+      <div class="problem-title">Il magazzino ti tradisce</div>
+      <div class="problem-body">Finisce la merce nel momento peggiore. Nessuno ti aveva avvisato che le scorte erano sotto il minimo.</div>
+    </div>
+  </div>
+</section>
+
+<!-- SOLUZIONE -->
+<section class="solution">
+  <div class="solution-inner">
+    <div class="reveal">
+      <p class="section-label">La soluzione</p>
+      <h2 class="section-title">
+        Correlatio trasforma i tuoi dati<br>
+        in <em>decisioni chiare.</em>
+      </h2>
+    </div>
+
+    <div class="features">
+      <div class="feature reveal">
+        <div class="feature-icon">📊</div>
+        <div class="feature-title">Dashboard in 30 secondi</div>
+        <div class="feature-body">Apri l'app e vedi fatturato, da incassare, da pagare e saldo netto. Tutto aggiornato in tempo reale, senza fare nulla.</div>
+      </div>
+      <div class="feature reveal">
+        <div class="feature-icon">⚠️</div>
+        <div class="feature-title">Alert anomalie prezzi</div>
+        <div class="feature-body">Se un fornitore ti fattura più del prezzo concordato, Correlatio te lo segnala automaticamente all'importazione della fattura.</div>
+      </div>
+      <div class="feature reveal">
+        <div class="feature-icon">📦</div>
+        <div class="feature-title">Magazzino sempre sotto controllo</div>
+        <div class="feature-body">Scorte aggiornate automaticamente ad ogni acquisto. Alert quando un articolo scende sotto la quantità minima.</div>
+      </div>
+      <div class="feature reveal">
+        <div class="feature-icon">🧾</div>
+        <div class="feature-title">Dati pronti per il commercialista</div>
+        <div class="feature-body">Partita doppia automatica su ogni fattura. Prima nota, scadenzario, liquidazione IVA. Zero lavoro manuale.</div>
+      </div>
+      <div class="feature reveal">
+        <div class="feature-icon">⚡</div>
+        <div class="feature-title">Fatturazione elettronica SDI</div>
+        <div class="feature-body">Invia le fatture direttamente al Sistema di Interscambio con un click. Nessun portale esterno, nessun copia-incolla.</div>
+      </div>
+      <div class="feature reveal">
+        <div class="feature-icon">📈</div>
+        <div class="feature-title">Scadenzario intelligente</div>
+        <div class="feature-body">Sai sempre chi ti deve pagare e quando, e cosa devi pagare tu. Niente sorprese sulla liquidità.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="section">
+  <div class="reveal">
+    <p class="section-label">Pricing</p>
+    <h2 class="section-title">
+      Semplice come deve essere.<br>
+      <em>Nessuna sorpresa.</em>
+    </h2>
+    <p class="section-body">Abbonamento mensile, disdici quando vuoi. Nessun contratto, nessun costo nascosto.</p>
+  </div>
+
+  <div class="pricing-grid reveal">
+    <div class="pricing-card">
+      <div class="pricing-badge">Starter</div>
+      <div class="pricing-plan">Freelance</div>
+      <div class="pricing-price">€29</div>
+      <div class="pricing-period">al mese · 1 utente · 1 azienda</div>
+      <ul class="pricing-features">
+        <li>Dashboard completa</li>
+        <li>Fatture attive e passive</li>
+        <li>Fatturazione elettronica SDI</li>
+        <li>Scadenzario</li>
+        <li>Backup automatico</li>
+      </ul>
+      <a href="#waitlist" class="pricing-btn">Inizia ora</a>
+    </div>
+
+    <div class="pricing-card featured">
+      <div class="pricing-badge">Più scelto</div>
+      <div class="pricing-plan">Pro</div>
+      <div class="pricing-price">€79</div>
+      <div class="pricing-period">al mese · fino a 5 utenti</div>
+      <ul class="pricing-features">
+        <li>Tutto di Starter</li>
+        <li>Magazzino e listino fornitori</li>
+        <li>Alert anomalie prezzi</li>
+        <li>Liquidazione IVA automatica</li>
+        <li>Report per commercialista</li>
+        <li>Multi-azienda</li>
+      </ul>
+      <a href="#waitlist" class="pricing-btn">Inizia ora</a>
+    </div>
+
+    <div class="pricing-card">
+      <div class="pricing-badge">Pro + Supporto</div>
+      <div class="pricing-plan">Enterprise</div>
+      <div class="pricing-price">€129</div>
+      <div class="pricing-period">al mese · utenti illimitati</div>
+      <ul class="pricing-features">
+        <li>Tutto di Pro</li>
+        <li>Onboarding dedicato</li>
+        <li>Supporto prioritario</li>
+        <li>Personalizzazione piano conti</li>
+        <li>Formazione del team</li>
+      </ul>
+      <a href="#waitlist" class="pricing-btn">Contattaci</a>
+    </div>
+  </div>
+
+  <p class="section-body reveal" style="margin-top:24px; font-size:13px;">
+    ✦ &nbsp;Trial gratuito di 30 giorni su tutti i piani · Nessuna carta di credito richiesta
+  </p>
+</section>
+
+<!-- CTA FINALE -->
+<section class="cta-final">
+  <h2 class="hero-title reveal" style="opacity:1;animation:none;">
+    Pronto a sapere <em>davvero</em><br>come sta andando?
+  </h2>
+  <p class="hero-sub reveal" style="opacity:1;animation:none;">
+    Unisciti alla lista di attesa. I primi 50 iscritti ricevono<br>3 mesi gratuiti e accesso prioritario al lancio.
+  </p>
+  <form class="waitlist-form" action="https://formspree.io/f/TUOID" method="POST">
+    <input type="email" name="email" placeholder="La tua email" required>
+    <button type="submit">Voglio i 3 mesi gratuiti</button>
+  </form>
+  <p class="form-note">Già <strong>—</strong> persone in lista · Accesso anticipato gratuito</p>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2026 Correlatio · <a href="mailto:info@correlatio.it">info@correlatio.it</a> · <a href="#">Privacy Policy</a></p>
+  <p style="margin-top:8px; font-size:10px; letter-spacing:0.1em;">DOVE LE ESIGENZE INCONTRANO LE SOLUZIONI</p>
+</footer>
+
+<script>
+  // Scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // Form submit
+  document.querySelectorAll('form').forEach(form => {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = form.querySelector('button');
+      btn.textContent = 'Invio...';
+      btn.disabled = true;
+
+      // Formspree
+      const res = await fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { 'Accept': 'application/json' }
+      });
+
+      if (res.ok) {
+        form.innerHTML = '<p style="color:#4CAF50;font-size:15px;text-align:center;padding:16px;">✓ &nbsp;Perfetto! Ti contatteremo presto.</p>';
+      } else {
+        btn.textContent = 'Riprova';
+        btn.disabled = false;
+      }
+    });
+  });
+</script>
+</body>
+</html>
