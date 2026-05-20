@@ -20,7 +20,6 @@
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
   html { scroll-behavior: smooth; }
 
   body {
@@ -28,16 +27,6 @@
     background: var(--sand);
     color: var(--ink);
     overflow-x: hidden;
-  }
-
-  /* ── NOISE TEXTURE ── */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 0;
   }
 
   /* ── NAV ── */
@@ -49,7 +38,7 @@
     align-items: center;
     justify-content: space-between;
     padding: 20px 60px;
-    background: rgba(245, 240, 232, 0.85);
+    background: rgba(245, 240, 232, 0.92);
     backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--border);
   }
@@ -74,20 +63,17 @@
     padding: 8px 20px;
     transition: all 0.2s;
   }
-  .nav-cta:hover {
-    background: var(--accent);
-    color: white;
-  }
+  .nav-cta:hover { background: var(--accent); color: white; }
 
   /* ── HERO ── */
   .hero {
-    min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     text-align: center;
-    padding: 140px 40px 80px;
+    padding: 200px 40px 80px;
+    min-height: 100vh;
     position: relative;
   }
 
@@ -108,7 +94,7 @@
     line-height: 1.1;
     color: var(--ink);
     max-width: 860px;
-    margin-bottom: 16px;
+    margin-bottom: 20px;
   }
 
   .hero-title em {
@@ -129,8 +115,6 @@
     width: 100%;
     height: 2px;
     background: var(--gold);
-    opacity: 0;
-    animation: lineIn 0.6s ease forwards 1.2s;
   }
 
   .hero-sub {
@@ -183,10 +167,7 @@
     white-space: nowrap;
   }
 
-  .waitlist-form button:hover {
-    background: var(--ink);
-    border-color: var(--ink);
-  }
+  .waitlist-form button:hover { background: var(--ink); border-color: var(--ink); }
 
   .form-note {
     font-size: 11px;
@@ -203,7 +184,7 @@
     margin: 60px auto;
   }
 
-  /* ── PROBLEMA ── */
+  /* ── SEZIONI ── */
   .section {
     max-width: 1100px;
     margin: 0 auto;
@@ -239,7 +220,7 @@
     max-width: 580px;
   }
 
-  /* ── PROBLEMI GRID ── */
+  /* ── PROBLEMI ── */
   .problems {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -302,18 +283,9 @@
     pointer-events: none;
   }
 
-  .solution-inner {
-    max-width: 1100px;
-    margin: 0 auto;
-  }
-
+  .solution-inner { max-width: 1100px; margin: 0 auto; }
   .solution .section-label { color: var(--gold); }
-
-  .solution .section-title {
-    color: white;
-    max-width: 600px;
-  }
-
+  .solution .section-title { color: white; max-width: 600px; }
   .solution .section-title em { color: var(--gold); }
 
   .features {
@@ -328,10 +300,7 @@
     padding-left: 24px;
   }
 
-  .feature-icon {
-    font-size: 20px;
-    margin-bottom: 12px;
-  }
+  .feature-icon { font-size: 20px; margin-bottom: 12px; }
 
   .feature-title {
     font-family: 'Cormorant Garamond', serif;
@@ -361,14 +330,10 @@
   .pricing-card {
     background: var(--sand);
     padding: 40px 32px;
-    position: relative;
     transition: background 0.2s;
   }
 
-  .pricing-card.featured {
-    background: var(--accent);
-  }
-
+  .pricing-card.featured { background: var(--accent); }
   .pricing-card:hover:not(.featured) { background: var(--sand2); }
 
   .pricing-badge {
@@ -432,15 +397,8 @@
     border-bottom-color: rgba(255,255,255,0.15);
   }
 
-  .pricing-features li::before {
-    content: '—';
-    color: var(--gold);
-    font-size: 12px;
-  }
-
-  .pricing-card.featured .pricing-features li::before {
-    color: rgba(255,255,255,0.5);
-  }
+  .pricing-features li::before { content: '—'; color: var(--gold); font-size: 12px; }
+  .pricing-card.featured .pricing-features li::before { color: rgba(255,255,255,0.5); }
 
   .pricing-btn {
     display: block;
@@ -460,10 +418,7 @@
     width: 100%;
   }
 
-  .pricing-btn:hover {
-    background: var(--accent);
-    color: white;
-  }
+  .pricing-btn:hover { background: var(--accent); color: white; }
 
   .pricing-card.featured .pricing-btn {
     background: white;
@@ -488,7 +443,6 @@
   .cta-final .hero-title { margin: 0 auto 16px; }
   .cta-final .hero-sub { margin: 0 auto 48px; }
   .cta-final .waitlist-form { margin: 0 auto; }
-  .cta-final .form-note { opacity: 1; }
 
   /* ── FOOTER ── */
   footer {
@@ -501,21 +455,7 @@
     letter-spacing: 0.06em;
   }
 
-  footer a {
-    color: rgba(255,255,255,0.5);
-    text-decoration: none;
-  }
-
-  /* ── ANIMAZIONI ── */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  @keyframes lineIn {
-    from { opacity: 0; transform: scaleX(0); }
-    to   { opacity: 1; transform: scaleX(1); }
-  }
+  footer a { color: rgba(255,255,255,0.5); text-decoration: none; }
 
   /* ── SCROLL REVEAL ── */
   .reveal {
@@ -523,10 +463,7 @@
     transform: translateY(24px);
     transition: opacity 0.7s ease, transform 0.7s ease;
   }
-  .reveal.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
 
   /* ── SUCCESS STATE ── */
   .success-msg {
@@ -570,7 +507,6 @@
     Correlatio è il gestionale pensato per chi non vuole pensarci.<br>
     Apri l'app. Il resto lo fa lui.
   </p>
-
   <form class="waitlist-form" id="waitlist" action="https://formspree.io/f/xlgvdgqr" method="POST">
     <input type="email" name="email" placeholder="La tua email" required>
     <button type="submit">Voglio provarlo</button>
@@ -725,17 +661,17 @@
 
 <!-- CTA FINALE -->
 <section class="cta-final">
-  <h2 class="hero-title reveal" style="opacity:1;animation:none;">
+  <h2 class="hero-title">
     Pronto a sapere <em>davvero</em><br>come sta andando?
   </h2>
-  <p class="hero-sub reveal" style="opacity:1;animation:none;">
+  <p class="hero-sub" style="margin: 16px auto 48px;">
     Unisciti alla lista di attesa. I primi 50 iscritti ricevono<br>3 mesi gratuiti e accesso prioritario al lancio.
   </p>
-  <form class="waitlist-form" action="https://formspree.io/f/xlgvdgqr" method="POST">
+  <form class="waitlist-form" style="margin: 0 auto;" action="https://formspree.io/f/xlgvdgqr" method="POST">
     <input type="email" name="email" placeholder="La tua email" required>
     <button type="submit">Voglio i 3 mesi gratuiti</button>
   </form>
-  <p class="form-note">Già <strong>—</strong> persone in lista · Accesso anticipato gratuito</p>
+  <p class="form-note" style="margin-top:12px;">Già <strong>—</strong> persone in lista · Accesso anticipato gratuito</p>
 </section>
 
 <!-- FOOTER -->
@@ -765,7 +701,6 @@
       btn.textContent = 'Invio...';
       btn.disabled = true;
 
-      // Formspree
       const res = await fetch(form.action, {
         method: 'POST',
         body: new FormData(form),
