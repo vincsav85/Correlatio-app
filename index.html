@@ -457,6 +457,171 @@
 
   footer a { color: rgba(255,255,255,0.5); text-decoration: none; }
 
+  /* ── HERO EXTRAS ── */
+  .hero-section-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    text-align: center;
+    margin: 48px 0 16px;
+  }
+
+  .hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    border: 1px solid var(--border);
+    max-width: 500px;
+    width: 100%;
+    margin: 40px auto 0;
+    background: var(--border);
+  }
+
+  .hero-stat {
+    flex: 1;
+    background: var(--sand);
+    padding: 16px 12px;
+    text-align: center;
+  }
+
+  .hero-stat + .hero-stat { border-left: 1px solid var(--border); }
+
+  .hero-stat-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px;
+    font-weight: 300;
+    color: var(--ink);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .hero-stat-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .hero-app {
+    max-width: 560px;
+    width: 100%;
+    margin: 0 auto;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(28,26,23,0.12);
+  }
+
+  .hero-app-bar {
+    background: var(--ink2);
+    padding: 8px 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .hero-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .hero-app-title {
+    font-size: 11px;
+    color: rgba(255,255,255,0.4);
+    margin-left: 8px;
+    letter-spacing: 0.1em;
+  }
+
+  .hero-app-body {
+    background: var(--sand2);
+    padding: 16px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .hero-app-card {
+    background: white;
+    border-radius: 4px;
+    padding: 12px;
+    border: 0.5px solid var(--border);
+  }
+
+  .hero-app-card-label {
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+
+  .hero-app-card-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-weight: 300;
+    color: var(--ink);
+  }
+
+  .hero-app-chart {
+    background: white;
+    border-radius: 4px;
+    padding: 12px;
+    border: 0.5px solid var(--border);
+    grid-column: span 3;
+    display: flex;
+    align-items: flex-end;
+    gap: 6px;
+    height: 60px;
+  }
+
+  .hero-bar {
+    flex: 1;
+    border-radius: 2px 2px 0 0;
+    background: var(--accent);
+    opacity: 0.7;
+  }
+
+  .hero-bar.highlight { opacity: 1; background: var(--gold); }
+
+  .hero-trust {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin-top: 32px;
+  }
+
+  .hero-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+  }
+
+  .hero-badge-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--gold);
+    flex-shrink: 0;
+  }
+
+  .hero-divider-v {
+    width: 1px;
+    height: 20px;
+    background: var(--border);
+  }
+
   /* ── SCROLL REVEAL ── */
   .reveal {
     opacity: 0;
@@ -507,12 +672,73 @@
     Correlatio è il gestionale pensato per chi non vuole pensarci.<br>
     Apri l'app. Il resto lo fa lui.
   </p>
-  <form class="waitlist-form" action="https://formspree.io/f/xlgvdgqr" method="POST">
+  <form class="waitlist-form" id="waitlist" action="https://formspree.io/f/xlgvdgqr" method="POST">
     <input type="email" name="email" placeholder="La tua email" required>
     <button type="submit">Voglio provarlo</button>
   </form>
   <p class="form-note">Accesso anticipato gratuito · Nessuno spam · Disdici quando vuoi</p>
   <p class="success-msg" id="success">✓ &nbsp;Perfetto! Ti contatteremo presto.</p>
+
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <div class="hero-stat-value">30"</div>
+      <div class="hero-stat-label">Per vedere tutto</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-value">100%</div>
+      <div class="hero-stat-label">Italiano e SDI</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-value">0</div>
+      <div class="hero-stat-label">Portali esterni</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-value">∞</div>
+      <div class="hero-stat-label">Backup automatici</div>
+    </div>
+  </div>
+
+  <p class="hero-section-label">La dashboard</p>
+  <div class="hero-app">
+    <div class="hero-app-bar">
+      <span class="hero-dot" style="background:#E24B4A"></span>
+      <span class="hero-dot" style="background:#EF9F27"></span>
+      <span class="hero-dot" style="background:#639922"></span>
+      <span class="hero-app-title">CORRELATIO</span>
+    </div>
+    <div class="hero-app-body">
+      <div class="hero-app-card">
+        <div class="hero-app-card-label">Fatturato mese</div>
+        <div class="hero-app-card-value">€ 18.450</div>
+      </div>
+      <div class="hero-app-card">
+        <div class="hero-app-card-label">Da incassare</div>
+        <div class="hero-app-card-value" style="color:#C9A84C">€ 4.200</div>
+      </div>
+      <div class="hero-app-card">
+        <div class="hero-app-card-label">Saldo netto</div>
+        <div class="hero-app-card-value" style="color:#2E7D52">€ 11.320</div>
+      </div>
+      <div class="hero-app-chart">
+        <div class="hero-bar" style="height:35%"></div>
+        <div class="hero-bar" style="height:55%"></div>
+        <div class="hero-bar" style="height:45%"></div>
+        <div class="hero-bar" style="height:70%"></div>
+        <div class="hero-bar" style="height:60%"></div>
+        <div class="hero-bar" style="height:80%"></div>
+        <div class="hero-bar highlight" style="height:90%"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-trust">
+    <div class="hero-badge"><span class="hero-badge-dot"></span>Fatturazione SDI certificata</div>
+    <div class="hero-divider-v"></div>
+    <div class="hero-badge"><span class="hero-badge-dot"></span>Conforme normativa italiana</div>
+    <div class="hero-divider-v"></div>
+    <div class="hero-badge"><span class="hero-badge-dot"></span>Dati sul tuo Mac, non nel cloud</div>
+  </div>
+
 </section>
 
 <div class="divider"></div>
@@ -669,7 +895,7 @@
   </p>
   <form class="waitlist-form" style="margin: 0 auto;" action="https://formspree.io/f/xlgvdgqr" method="POST">
     <input type="email" name="email" placeholder="La tua email" required>
-    <button type="submit">Voglio provare!</button>
+    <button type="submit">Voglio il mese gratuito</button>
   </form>
   <p class="form-note" style="margin-top:12px;">Già <strong>—</strong> persone in lista · Accesso anticipato gratuito</p>
 </section>
