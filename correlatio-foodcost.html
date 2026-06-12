@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calcolatore Food Cost — Correlatio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sand:   #F5F0E8;
+    --sand2:  #EDE8DF;
+    --ink:    #1C1A17;
+    --muted:  #8A7F72;
+    --accent: #4A6FA5;
+    --gold:   #C9A84C;
+    --border: #D4C9B8;
+    --green:  #2E7D52;
+    --red:    #E24B4A;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  .fc-section {
+    font-family: 'Jost', sans-serif;
+    background: var(--sand);
+    color: var(--ink);
+    padding: 80px 40px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .fc-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+  }
+
+  .fc-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(28px, 4vw, 46px);
+    font-weight: 300;
+    line-height: 1.2;
+    color: var(--ink);
+    margin-bottom: 12px;
+  }
+  .fc-title em { font-style: italic; color: var(--accent); }
+
+  .fc-sub {
+    font-size: 15px;
+    font-weight: 300;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 48px;
+    max-width: 540px;
+  }
+
+  .fc-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    align-items: start;
+  }
+  @media (max-width: 700px) { .fc-grid { grid-template-columns: 1fr; } }
+
+  /* ── INPUTS ── */
+  .fc-inputs {
+    background: white;
+    border: 1px solid var(--border);
+    padding: 32px;
+  }
+
+  .fc-field { margin-bottom: 24px; }
+  .fc-field:last-child { margin-bottom: 0; }
+
+  .fc-field label {
+    display: block;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  .fc-text-input {
+    width: 100%;
+    padding: 12px 14px;
+    font-family: 'Jost', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    background: var(--sand);
+    border: 1px solid var(--border);
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .fc-text-input:focus { border-color: var(--accent); }
+
+  .fc-price-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .fc-price-wrap .sym {
+    position: absolute;
+    left: 14px;
+    font-size: 14px;
+    color: var(--muted);
+    pointer-events: none;
+  }
+  .fc-price-wrap input {
+    width: 100%;
+    padding: 12px 14px 12px 28px;
+    font-family: 'Jost', sans-serif;
+    font-size: 15px;
+    background: var(--sand);
+    border: 1px solid var(--border);
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.2s;
+    -moz-appearance: textfield;
+  }
+  .fc-price-wrap input::-webkit-outer-spin-button,
+  .fc-price-wrap input::-webkit-inner-spin-button { -webkit-appearance: none; }
+  .fc-price-wrap input:focus { border-color: var(--accent); }
+
+  /* ingredienti */
+  .fc-ing-list { list-style: none; padding: 0; margin: 0 0 10px 0; }
+  .fc-ing-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .fc-ing-row .ing-name {
+    flex: 1;
+    min-width: 0;
+    padding: 10px 12px;
+    font-family: 'Jost', sans-serif;
+    font-size: 13px;
+    font-weight: 300;
+    background: var(--sand);
+    border: 1px solid var(--border);
+    color: var(--ink);
+    outline: none;
+  }
+  .fc-ing-row .ing-name:focus { border-color: var(--accent); }
+  .fc-ing-row .ing-cost {
+    width: 88px;
+    flex-shrink: 0;
+    padding: 10px 12px;
+    font-family: 'Jost', sans-serif;
+    font-size: 13px;
+    background: var(--sand);
+    border: 1px solid var(--border);
+    color: var(--ink);
+    outline: none;
+    -moz-appearance: textfield;
+  }
+  .fc-ing-row .ing-cost::-webkit-outer-spin-button,
+  .fc-ing-row .ing-cost::-webkit-inner-spin-button { -webkit-appearance: none; }
+  .fc-ing-row .ing-cost:focus { border-color: var(--accent); }
+  .fc-ing-row .ing-del {
+    background: none;
+    border: none;
+    color: var(--border);
+    cursor: pointer;
+    font-size: 20px;
+    line-height: 1;
+    padding: 0 2px;
+    transition: color 0.2s;
+    flex-shrink: 0;
+  }
+  .fc-ing-row .ing-del:hover { color: var(--red); }
+
+  .fc-add-btn {
+    width: 100%;
+    padding: 10px 16px;
+    font-family: 'Jost', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    background: none;
+    border: 1px dashed var(--border);
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s;
+    margin-bottom: 16px;
+  }
+  .fc-add-btn:hover { border-color: var(--accent); background: #F0F4FA; }
+
+  .fc-correlatio-note {
+    padding: 12px 14px;
+    border-left: 2px solid var(--gold);
+    background: #FDFAF4;
+  }
+  .fc-correlatio-note .cn-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 4px;
+  }
+  .fc-correlatio-note .cn-body {
+    font-size: 12px;
+    font-weight: 300;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* ── RISULTATI ── */
+  .fc-results { display: flex; flex-direction: column; gap: 14px; }
+
+  .fc-main-card {
+    background: var(--ink);
+    padding: 32px;
+    text-align: center;
+  }
+  .fc-main-card .mc-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+  .fc-main-card .mc-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 72px;
+    font-weight: 300;
+    line-height: 1;
+    margin-bottom: 6px;
+    transition: color 0.3s;
+  }
+  .fc-main-card .mc-status {
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    margin-bottom: 12px;
+  }
+  .fc-bar-track {
+    height: 3px;
+    background: #2C2A27;
+  }
+  .fc-bar-fill {
+    height: 100%;
+    transition: width 0.4s ease, background 0.3s;
+  }
+
+  .fc-stat-card {
+    background: white;
+    border: 1px solid var(--border);
+    padding: 18px 22px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .fc-stat-card .sc-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .fc-stat-card .sc-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px;
+    font-weight: 300;
+    color: var(--ink);
+    transition: color 0.3s;
+  }
+
+  .fc-alert-box {
+    padding: 12px 16px;
+    border-left: 2px solid var(--red);
+    background: #FEF5F5;
+    font-size: 12px;
+    color: #A32D2D;
+    line-height: 1.6;
+    display: none;
+  }
+
+  /* ── CTA ── */
+  .fc-cta {
+    margin-top: 40px;
+    text-align: center;
+  }
+  .fc-cta a {
+    display: inline-block;
+    font-family: 'Jost', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: white;
+    background: var(--accent);
+    border: 1px solid var(--accent);
+    padding: 14px 36px;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+  .fc-cta a:hover { background: var(--ink); border-color: var(--ink); }
+  .fc-cta .cta-note {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 12px;
+    line-height: 1.7;
+    letter-spacing: 0.03em;
+  }
+</style>
+
+<section class="fc-section">
+  <p class="fc-label">Strumento gratuito</p>
+  <h2 class="fc-title">Calcola il tuo <em>food cost</em><br>in 30 secondi.</h2>
+  <p class="fc-sub">Inserisci gli ingredienti del piatto e il prezzo di vendita. Scopri subito se stai guadagnando davvero — o solo lavorando per il fornitore.</p>
+
+  <div class="fc-grid">
+
+    <div class="fc-inputs">
+      <div class="fc-field">
+        <label>Nome del piatto</label>
+        <input class="fc-text-input" type="text" id="dish-name" placeholder="es. Margherita, Carbonara, Tiramisù…">
+      </div>
+
+      <div class="fc-field">
+        <label>Ingredienti e costi (€ per porzione)</label>
+        <ul class="fc-ing-list" id="ing-list">
+          <li class="fc-ing-row">
+            <input class="ing-name" type="text" placeholder="Ingrediente" oninput="calc()">
+            <input class="ing-cost" type="number" min="0" step="0.01" placeholder="€" oninput="calc()">
+            <button class="ing-del" onclick="delIng(this)">×</button>
+          </li>
+          <li class="fc-ing-row">
+            <input class="ing-name" type="text" placeholder="Ingrediente" oninput="calc()">
+            <input class="ing-cost" type="number" min="0" step="0.01" placeholder="€" oninput="calc()">
+            <button class="ing-del" onclick="delIng(this)">×</button>
+          </li>
+          <li class="fc-ing-row">
+            <input class="ing-name" type="text" placeholder="Ingrediente" oninput="calc()">
+            <input class="ing-cost" type="number" min="0" step="0.01" placeholder="€" oninput="calc()">
+            <button class="ing-del" onclick="delIng(this)">×</button>
+          </li>
+        </ul>
+        <button class="fc-add-btn" onclick="addIng()">+ Aggiungi ingrediente</button>
+
+        <div class="fc-correlatio-note">
+          <p class="cn-label">Con Correlatio</p>
+          <p class="cn-body">I costi degli ingredienti vengono importati automaticamente dalle tue fatture passive. Nessun dato da inserire a mano — tutto sempre aggiornato al prezzo reale pagato al fornitore.</p>
+        </div>
+      </div>
+
+      <div class="fc-field" style="margin-top:8px">
+        <label>Prezzo di vendita</label>
+        <div class="fc-price-wrap">
+          <span class="sym">€</span>
+          <input type="number" id="sell-price" min="0" step="0.01" placeholder="0.00" oninput="calc()">
+        </div>
+      </div>
+    </div>
+
+    <div class="fc-results">
+      <div class="fc-main-card">
+        <div class="mc-label">Food cost %</div>
+        <div class="mc-value" id="fc-pct" style="color:#C9A84C">—</div>
+        <div class="mc-status" id="fc-status">inserisci i dati per calcolare</div>
+        <div class="fc-bar-track">
+          <div class="fc-bar-fill" id="fc-bar" style="width:0%;background:#C9A84C"></div>
+        </div>
+      </div>
+
+      <div class="fc-stat-card">
+        <span class="sc-label">Costo ingredienti</span>
+        <span class="sc-value" id="r-cost">€ —</span>
+      </div>
+
+      <div class="fc-stat-card">
+        <span class="sc-label">Margine lordo</span>
+        <span class="sc-value" id="r-margin">€ —</span>
+      </div>
+
+      <div class="fc-stat-card">
+        <span class="sc-label">Moltiplicatore</span>
+        <span class="sc-value" id="r-mult">— ×</span>
+      </div>
+
+      <div class="fc-alert-box" id="fc-alert">
+        Il food cost supera il 35%. Rivedi i costi degli ingredienti o il prezzo di vendita — stai lasciando margine sul tavolo.
+      </div>
+    </div>
+
+  </div>
+
+  <div class="fc-cta">
+    <a href="https://correlatio.it#waitlist">Traccia ogni piatto con Correlatio →</a>
+    <p class="cta-note">
+      Con Correlatio i costi si aggiornano automaticamente dalle tue fatture passive.<br>
+      Modulo Food Cost incluso nel piano Enterprise · Prova gratuita 30 giorni · Nessuna carta richiesta
+    </p>
+  </div>
+</section>
+
+<script>
+  function calc() {
+    var rows = document.querySelectorAll('#ing-list .fc-ing-row');
+    var total = 0;
+    rows.forEach(function(r) {
+      var v = parseFloat(r.querySelector('.ing-cost').value) || 0;
+      total += v;
+    });
+    var sell = parseFloat(document.getElementById('sell-price').value) || 0;
+
+    document.getElementById('r-cost').textContent = total > 0 ? '€ ' + total.toFixed(2) : '€ —';
+
+    if (total <= 0 || sell <= 0) {
+      document.getElementById('fc-pct').textContent = '—';
+      document.getElementById('fc-pct').style.color = '#C9A84C';
+      document.getElementById('fc-status').textContent = 'inserisci i dati per calcolare';
+      document.getElementById('fc-bar').style.width = '0%';
+      document.getElementById('r-margin').textContent = '€ —';
+      document.getElementById('r-margin').style.color = '#1C1A17';
+      document.getElementById('r-mult').textContent = '— ×';
+      document.getElementById('fc-alert').style.display = 'none';
+      return;
+    }
+
+    var pct = (total / sell) * 100;
+    var margin = sell - total;
+    var mult = sell / total;
+
+    document.getElementById('fc-pct').textContent = pct.toFixed(1) + '%';
+    document.getElementById('r-margin').textContent = '€ ' + margin.toFixed(2);
+    document.getElementById('r-margin').style.color = margin >= 0 ? '#2E7D52' : '#E24B4A';
+    document.getElementById('r-mult').textContent = mult.toFixed(2) + ' ×';
+
+    var barW = Math.min(pct, 100);
+    document.getElementById('fc-bar').style.width = barW + '%';
+
+    if (pct <= 28) {
+      document.getElementById('fc-pct').style.color = '#2E7D52';
+      document.getElementById('fc-bar').style.background = '#2E7D52';
+      document.getElementById('fc-status').textContent = 'ottimo — food cost sotto il 28%';
+      document.getElementById('fc-alert').style.display = 'none';
+    } else if (pct <= 35) {
+      document.getElementById('fc-pct').style.color = '#C9A84C';
+      document.getElementById('fc-bar').style.background = '#C9A84C';
+      document.getElementById('fc-status').textContent = 'nella norma — tra il 28% e il 35%';
+      document.getElementById('fc-alert').style.display = 'none';
+    } else {
+      document.getElementById('fc-pct').style.color = '#E24B4A';
+      document.getElementById('fc-bar').style.background = '#E24B4A';
+      document.getElementById('fc-status').textContent = 'attenzione — food cost sopra il 35%';
+      document.getElementById('fc-alert').style.display = 'block';
+    }
+  }
+
+  function addIng() {
+    var li = document.createElement('li');
+    li.className = 'fc-ing-row';
+    li.innerHTML = '<input class="ing-name" type="text" placeholder="Ingrediente" oninput="calc()"><input class="ing-cost" type="number" min="0" step="0.01" placeholder="€" oninput="calc()"><button class="ing-del" onclick="delIng(this)">×</button>';
+    document.getElementById('ing-list').appendChild(li);
+  }
+
+  function delIng(btn) {
+    var rows = document.querySelectorAll('#ing-list .fc-ing-row');
+    if (rows.length > 1) {
+      btn.closest('.fc-ing-row').remove();
+      calc();
+    }
+  }
+</script>
