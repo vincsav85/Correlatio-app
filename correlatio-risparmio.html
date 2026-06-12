@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calcolatore Risparmio — Correlatio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sand:   #F5F0E8;
+    --sand2:  #EDE8DF;
+    --ink:    #1C1A17;
+    --muted:  #8A7F72;
+    --accent: #4A6FA5;
+    --gold:   #C9A84C;
+    --border: #D4C9B8;
+    --green:  #2E7D52;
+    --red:    #E24B4A;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  .rs-section {
+    font-family: 'Jost', sans-serif;
+    background: var(--sand);
+    color: var(--ink);
+    padding: 80px 40px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .rs-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+  }
+  .rs-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(28px, 4vw, 46px);
+    font-weight: 300;
+    line-height: 1.2;
+    color: var(--ink);
+    margin-bottom: 12px;
+  }
+  .rs-title em { font-style: italic; color: var(--accent); }
+  .rs-sub {
+    font-size: 15px;
+    font-weight: 300;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 48px;
+    max-width: 540px;
+  }
+
+  .rs-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    align-items: start;
+  }
+  @media (max-width: 700px) { .rs-grid { grid-template-columns: 1fr; } }
+
+  /* INPUTS */
+  .rs-inputs {
+    background: white;
+    border: 1px solid var(--border);
+    padding: 32px;
+  }
+
+  .rs-field { margin-bottom: 28px; }
+  .rs-field:last-child { margin-bottom: 0; }
+
+  .rs-field-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 10px;
+  }
+  .rs-field-header label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .rs-field-val {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 300;
+    color: var(--ink);
+  }
+
+  input[type="range"] {
+    width: 100%;
+    height: 3px;
+    -webkit-appearance: none;
+    background: var(--border);
+    outline: none;
+    cursor: pointer;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    background: var(--accent);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  input[type="range"]::-webkit-slider-thumb:hover { background: var(--ink); }
+  input[type="range"]::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    background: var(--accent);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+
+  .rs-field-note {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 6px;
+    font-weight: 300;
+  }
+
+  /* RISULTATI */
+  .rs-results { display: flex; flex-direction: column; gap: 0; }
+
+  .rs-main {
+    background: var(--ink);
+    padding: 36px 32px;
+    text-align: center;
+    margin-bottom: 14px;
+  }
+  .rs-main .rm-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+  .rs-main .rm-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 64px;
+    font-weight: 300;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .rs-main .rm-sub {
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+  }
+
+  .rs-compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+    margin-bottom: 14px;
+  }
+  .rs-compare-col {
+    background: white;
+    padding: 20px;
+    text-align: center;
+  }
+  .rs-compare-col.correlatio { background: #F0F4FA; }
+  .rs-compare-title {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+  .rs-compare-title.good { color: var(--accent); }
+  .rs-compare-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+  }
+  .rs-compare-row:last-child { border-bottom: none; }
+  .rs-compare-row .cr-label { color: var(--muted); }
+  .rs-compare-row .cr-val { font-weight: 500; color: var(--ink); }
+  .rs-compare-row .cr-val.good { color: var(--green); }
+  .rs-compare-row .cr-val.bad { color: var(--red); }
+
+  .rs-roi {
+    background: #F0F8F4;
+    border: 1px solid #B8D4C4;
+    border-left: 3px solid var(--green);
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .rs-roi-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--green);
+    margin-bottom: 4px;
+  }
+  .rs-roi-body { font-size: 12px; color: #3A6A4A; line-height: 1.5; }
+  .rs-roi-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px;
+    font-weight: 300;
+    color: var(--green);
+    flex-shrink: 0;
+    margin-left: 16px;
+  }
+
+  /* CTA */
+  .rs-cta {
+    margin-top: 40px;
+    text-align: center;
+  }
+  .rs-cta a {
+    display: inline-block;
+    font-family: 'Jost', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: white;
+    background: var(--accent);
+    border: 1px solid var(--accent);
+    padding: 14px 36px;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+  .rs-cta a:hover { background: var(--ink); border-color: var(--ink); }
+  .rs-cta p {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 12px;
+    letter-spacing: 0.03em;
+    line-height: 1.7;
+  }
+</style>
+
+<section class="rs-section">
+  <p class="rs-label">Calcola il tuo vantaggio</p>
+  <h2 class="rs-title">Quanto ti costa <em>non avere</em><br>Correlatio?</h2>
+  <p class="rs-sub">Ogni settimana perdi ore a fare cose che Correlatio fa in automatico. Scopri quanto tempo — e denaro — stai lasciando sul tavolo.</p>
+
+  <div class="rs-grid">
+
+    <div class="rs-inputs">
+
+      <div class="rs-field">
+        <div class="rs-field-header">
+          <label>Fatture passive al mese</label>
+          <span class="rs-field-val" id="val-fatt"><span id="v-fatt">20</span> fatture</span>
+        </div>
+        <input type="range" id="sl-fatt" min="5" max="100" step="5" value="20" oninput="calc()">
+        <div class="rs-field-note">Ogni fattura passiva richiede ~15 min di registrazione manuale</div>
+      </div>
+
+      <div class="rs-field">
+        <div class="rs-field-header">
+          <label>Articoli a magazzino</label>
+          <span class="rs-field-val" id="val-mag"><span id="v-mag">40</span> articoli</span>
+        </div>
+        <input type="range" id="sl-mag" min="10" max="200" step="10" value="40" oninput="calc()">
+        <div class="rs-field-note">Il controllo scorte manuale richiede ~30 min a settimana per ogni 20 articoli</div>
+      </div>
+
+      <div class="rs-field">
+        <div class="rs-field-header">
+          <label>Il tuo costo orario</label>
+          <span class="rs-field-val">€ <span id="v-ora">25</span>/ora</span>
+        </div>
+        <input type="range" id="sl-ora" min="15" max="80" step="5" value="25" oninput="calc()">
+        <div class="rs-field-note">Stima il valore della tua ora di lavoro</div>
+      </div>
+
+      <div class="rs-field">
+        <div class="rs-field-header">
+          <label>Piano Correlatio</label>
+          <span class="rs-field-val" id="val-piano">Starter · € 29</span>
+        </div>
+        <input type="range" id="sl-piano" min="0" max="2" step="1" value="0" oninput="calc()">
+        <div class="rs-field-note" id="piano-note">Dashboard, fatture, SDI, scadenzario</div>
+      </div>
+
+    </div>
+
+    <div class="rs-results">
+      <div class="rs-main">
+        <div class="rm-label">Risparmio mensile stimato</div>
+        <div class="rm-value" id="rs-main-val">€ 0</div>
+        <div class="rm-sub" id="rs-main-sub">imposta i tuoi dati</div>
+      </div>
+
+      <div class="rs-compare">
+        <div class="rs-compare-col">
+          <div class="rs-compare-title">Senza Correlatio</div>
+          <div class="rs-compare-row">
+            <span class="cr-label">Ore/mese</span>
+            <span class="cr-val bad" id="c-ore-senza">— h</span>
+          </div>
+          <div class="rs-compare-row">
+            <span class="cr-label">Costo lavoro</span>
+            <span class="cr-val bad" id="c-costo-senza">€ —</span>
+          </div>
+          <div class="rs-compare-row">
+            <span class="cr-label">Errori stimati</span>
+            <span class="cr-val bad" id="c-errori">— /mese</span>
+          </div>
+          <div class="rs-compare-row">
+            <span class="cr-label">Totale costo</span>
+            <span class="cr-val bad" id="c-tot-senza">€ —</span>
+          </div>
+        </div>
+        <div class="rs-compare-col correlatio">
+          <div class="rs-compare-title good">Con Correlatio</div>
+          <div class="rs-compare-row">
+            <span class="cr-label">Ore/mese</span>
+            <span class="cr-val good" id="c-ore-con">— h</span>
+          </div>
+          <div class="rs-compare-row">
+            <span class="cr-label">Costo lavoro</span>
+            <span class="cr-val good" id="c-costo-con">€ —</span>
+          </div>
+          <div class="rs-compare-row">
+            <span class="cr-label">Abbonamento</span>
+            <span class="cr-val" id="c-abbonamento">€ —</span>
+          </div>
+          <div class="rs-compare-row">
+            <span class="cr-label">Totale costo</span>
+            <span class="cr-val good" id="c-tot-con">€ —</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="rs-roi">
+        <div>
+          <div class="rs-roi-label">ROI mensile</div>
+          <div class="rs-roi-body" id="roi-body">Per ogni euro speso in Correlatio,<br>ne risparmi <strong id="roi-mult">—</strong>.</div>
+        </div>
+        <div class="rs-roi-value" id="roi-val">— ×</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="rs-cta">
+    <a href="https://correlatio.it#waitlist">Inizia a risparmiare oggi →</a>
+    <p>Prova gratuita 30 giorni · Nessuna carta di credito richiesta<br>Disdici quando vuoi · Nessun contratto</p>
+  </div>
+</section>
+
+<script>
+  var piani = [
+    { nome: 'Starter · € 29', costo: 29, note: 'Dashboard, fatture, SDI, scadenzario' },
+    { nome: 'Pro · € 79', costo: 79, note: 'Tutto Starter + magazzino, alert prezzi, IVA' },
+    { nome: 'Enterprise · € 129', costo: 129, note: 'Tutto Pro + Food Cost, HR, multi-sede' }
+  ];
+
+  function calc() {
+    var fatt  = parseInt(document.getElementById('sl-fatt').value);
+    var mag   = parseInt(document.getElementById('sl-mag').value);
+    var ora   = parseInt(document.getElementById('sl-ora').value);
+    var piano = parseInt(document.getElementById('sl-piano').value);
+
+    document.getElementById('v-fatt').textContent  = fatt;
+    document.getElementById('v-mag').textContent   = mag;
+    document.getElementById('v-ora').textContent   = ora;
+    document.getElementById('val-piano').textContent = piani[piano].nome;
+    document.getElementById('piano-note').textContent = piani[piano].note;
+
+    var oreFatt   = fatt * 0.25;
+    var oreMag    = (mag / 20) * 0.5 * 4.3;
+    var oreScad   = 1.5;
+    var oreReport = 2;
+    var oreTot    = oreFatt + oreMag + oreScad + oreReport;
+
+    var costoSenza = Math.round(oreTot * ora);
+    var errori     = Math.max(1, Math.round(fatt / 10));
+
+    var oreConCorr = oreTot * 0.1;
+    var costoConLavoro = Math.round(oreConCorr * ora);
+    var abbonamento = piani[piano].costo;
+    var totCon  = costoConLavoro + abbonamento;
+    var totSenza = costoSenza;
+
+    var risparmio = totSenza - totCon;
+    var roi = abbonamento > 0 ? (risparmio / abbonamento) : 0;
+
+    document.getElementById('c-ore-senza').textContent   = oreTot.toFixed(1) + ' h';
+    document.getElementById('c-costo-senza').textContent = '€ ' + costoSenza;
+    document.getElementById('c-errori').textContent      = errori + ' /mese';
+    document.getElementById('c-tot-senza').textContent   = '€ ' + totSenza;
+
+    document.getElementById('c-ore-con').textContent     = oreConCorr.toFixed(1) + ' h';
+    document.getElementById('c-costo-con').textContent   = '€ ' + costoConLavoro;
+    document.getElementById('c-abbonamento').textContent = '€ ' + abbonamento;
+    document.getElementById('c-tot-con').textContent     = '€ ' + totCon;
+
+    document.getElementById('rs-main-val').textContent = risparmio > 0 ? '€ ' + risparmio : '€ 0';
+    document.getElementById('rs-main-sub').textContent = risparmio > 0
+      ? oreTot.toFixed(1) + ' ore liberate ogni mese'
+      : 'aumenta le fatture o gli articoli';
+
+    document.getElementById('roi-val').textContent = roi > 0 ? roi.toFixed(1) + ' ×' : '— ×';
+    document.getElementById('roi-mult').textContent = roi > 0 ? roi.toFixed(1) : '—';
+  }
+
+  calc();
+</script>

@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Demo — Correlatio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sand:   #F5F0E8;
+    --sand2:  #EDE8DF;
+    --ink:    #1C1A17;
+    --ink2:   #2C2A27;
+    --muted:  #8A7F72;
+    --accent: #4A6FA5;
+    --gold:   #C9A84C;
+    --border: #D4C9B8;
+    --green:  #2E7D52;
+    --red:    #E24B4A;
+    --sidebar:#1A1C2E;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  .db-section {
+    font-family: 'Jost', sans-serif;
+    background: var(--sand);
+    color: var(--ink);
+    padding: 80px 40px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .db-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+  }
+  .db-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(28px, 4vw, 46px);
+    font-weight: 300;
+    line-height: 1.2;
+    color: var(--ink);
+    margin-bottom: 12px;
+  }
+  .db-title em { font-style: italic; color: var(--accent); }
+  .db-sub {
+    font-size: 15px;
+    font-weight: 300;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 48px;
+    max-width: 540px;
+  }
+
+  /* ── MESE SELECTOR ── */
+  .db-tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 24px;
+    border: 1px solid var(--border);
+    width: fit-content;
+  }
+  .db-tab {
+    padding: 10px 20px;
+    font-family: 'Jost', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    background: white;
+    border: none;
+    border-right: 1px solid var(--border);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .db-tab:last-child { border-right: none; }
+  .db-tab.active { background: var(--ink); color: white; }
+  .db-tab:hover:not(.active) { background: var(--sand2); }
+
+  /* ── APP FRAME ── */
+  .db-frame {
+    border: 1px solid var(--border);
+    background: white;
+    overflow: hidden;
+  }
+
+  .db-topbar {
+    background: var(--ink);
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .db-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .db-topbar-title {
+    font-family: 'Jost', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    margin-left: 8px;
+  }
+
+  .db-body {
+    display: flex;
+    min-height: 480px;
+  }
+
+  .db-sidebar {
+    width: 140px;
+    flex-shrink: 0;
+    background: #1A1C2E;
+    padding: 20px 0;
+  }
+  .db-nav-item {
+    padding: 9px 16px;
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    color: #5A6080;
+    cursor: pointer;
+    transition: all 0.2s;
+    border-left: 2px solid transparent;
+  }
+  .db-nav-item.active {
+    color: white;
+    border-left-color: var(--accent);
+    background: rgba(74, 111, 165, 0.15);
+  }
+  .db-nav-item:hover:not(.active) { color: #8890B0; }
+
+  .db-content {
+    flex: 1;
+    padding: 24px;
+    background: #F8F6F2;
+    overflow: hidden;
+  }
+
+  .db-content-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 400;
+    color: var(--ink);
+    margin-bottom: 20px;
+  }
+  .db-content-title span {
+    font-family: 'Jost', sans-serif;
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--muted);
+    margin-left: 8px;
+    letter-spacing: 0.08em;
+  }
+
+  /* KPI CARDS */
+  .db-kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  @media (max-width: 700px) { .db-kpi-grid { grid-template-columns: repeat(2,1fr); } }
+
+  .db-kpi {
+    background: white;
+    border: 1px solid var(--border);
+    padding: 16px;
+  }
+  .db-kpi-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .db-kpi-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px;
+    font-weight: 300;
+    color: var(--ink);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .db-kpi-delta {
+    font-size: 11px;
+    font-weight: 400;
+  }
+
+  /* GRAFICO BARRE */
+  .db-chart-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 12px;
+  }
+  @media (max-width: 700px) { .db-chart-row { grid-template-columns: 1fr; } }
+
+  .db-chart-card {
+    background: white;
+    border: 1px solid var(--border);
+    padding: 16px;
+  }
+  .db-chart-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+  .db-bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 6px;
+    height: 100px;
+  }
+  .db-bar-wrap {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    height: 100%;
+    justify-content: flex-end;
+  }
+  .db-bar {
+    width: 100%;
+    border-radius: 0;
+    transition: height 0.5s ease;
+    min-height: 4px;
+  }
+  .db-bar-month {
+    font-size: 9px;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+
+  /* SCADENZE */
+  .db-scad-list { display: flex; flex-direction: column; gap: 8px; }
+  .db-scad-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 10px;
+    border-left: 2px solid var(--border);
+    background: var(--sand);
+  }
+  .db-scad-item.urgent { border-left-color: var(--red); }
+  .db-scad-item.ok { border-left-color: var(--green); }
+  .db-scad-name { font-size: 11px; color: var(--ink); }
+  .db-scad-date { font-size: 10px; color: var(--muted); }
+  .db-scad-amt {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--ink);
+  }
+
+  /* ALERT */
+  .db-alert-card {
+    background: #FFF8EC;
+    border: 1px solid #E8C96A;
+    border-left: 3px solid var(--gold);
+    padding: 12px 16px;
+    margin-bottom: 12px;
+  }
+  .db-alert-title {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: #7A5C00;
+    margin-bottom: 4px;
+  }
+  .db-alert-body { font-size: 11px; color: #8A7030; line-height: 1.5; }
+
+  /* CTA */
+  .db-cta {
+    margin-top: 40px;
+    text-align: center;
+  }
+  .db-cta a {
+    display: inline-block;
+    font-family: 'Jost', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: white;
+    background: var(--accent);
+    border: 1px solid var(--accent);
+    padding: 14px 36px;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+  .db-cta a:hover { background: var(--ink); border-color: var(--ink); }
+  .db-cta p {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 12px;
+    letter-spacing: 0.03em;
+  }
+
+  .db-panel { display: none; }
+  .db-panel.active { display: block; }
+</style>
+
+<section class="db-section">
+  <p class="db-label">Demo interattiva</p>
+  <h2 class="db-title">La tua azienda, <em>in tempo reale.</em></h2>
+  <p class="db-sub">Esplora la dashboard come se fosse la tua. Cambia mese, naviga tra le sezioni e scopri cosa vedi ogni mattina aprendo Correlatio.</p>
+
+  <div class="db-tabs">
+    <button class="db-tab active" onclick="setMonth(0,this)">Aprile</button>
+    <button class="db-tab" onclick="setMonth(1,this)">Maggio</button>
+    <button class="db-tab" onclick="setMonth(2,this)">Giugno</button>
+  </div>
+
+  <div class="db-frame">
+    <div class="db-topbar">
+      <span class="db-dot" style="background:#E24B4A"></span>
+      <span class="db-dot" style="background:#EF9F27"></span>
+      <span class="db-dot" style="background:#639922"></span>
+      <span class="db-topbar-title">CORRELATIO — Ristorante La Pergola</span>
+    </div>
+
+    <div class="db-body">
+      <div class="db-sidebar">
+        <div class="db-nav-item active" onclick="setPanel('dashboard',this)">Dashboard</div>
+        <div class="db-nav-item" onclick="setPanel('scadenzario',this)">Scadenzario</div>
+        <div class="db-nav-item" onclick="setPanel('magazzino',this)">Magazzino</div>
+        <div class="db-nav-item" onclick="setPanel('anomalie',this)">Anomalie</div>
+      </div>
+
+      <div class="db-content">
+
+        <!-- DASHBOARD -->
+        <div class="db-panel active" id="panel-dashboard">
+          <div class="db-content-title">Dashboard <span id="dash-month-label">Aprile 2026</span></div>
+          <div class="db-kpi-grid">
+            <div class="db-kpi">
+              <div class="db-kpi-label">Fatturato</div>
+              <div class="db-kpi-value" id="kpi-fatt">€ 22.840</div>
+              <div class="db-kpi-delta" id="kpi-fatt-d" style="color:#2E7D52">▲ +8% vs marzo</div>
+            </div>
+            <div class="db-kpi">
+              <div class="db-kpi-label">Da incassare</div>
+              <div class="db-kpi-value" id="kpi-inc" style="color:#C9A84C">€ 4.600</div>
+              <div class="db-kpi-delta" style="color:#8A7F72">3 fatture aperte</div>
+            </div>
+            <div class="db-kpi">
+              <div class="db-kpi-label">Da pagare</div>
+              <div class="db-kpi-value" id="kpi-pag" style="color:#E24B4A">€ 6.120</div>
+              <div class="db-kpi-delta" id="kpi-pag-d" style="color:#E24B4A">2 in scadenza</div>
+            </div>
+            <div class="db-kpi">
+              <div class="db-kpi-label">Saldo netto</div>
+              <div class="db-kpi-value" id="kpi-saldo" style="color:#2E7D52">€ 11.340</div>
+              <div class="db-kpi-delta" style="color:#8A7F72">conto corrente</div>
+            </div>
+          </div>
+
+          <div class="db-chart-row">
+            <div class="db-chart-card">
+              <div class="db-chart-label">Fatturato ultimi 7 mesi</div>
+              <div class="db-bars" id="bars-chart">
+                <div class="db-bar-wrap"><div class="db-bar" style="height:42%;background:#D4C9B8"></div><div class="db-bar-month">Ott</div></div>
+                <div class="db-bar-wrap"><div class="db-bar" style="height:55%;background:#D4C9B8"></div><div class="db-bar-month">Nov</div></div>
+                <div class="db-bar-wrap"><div class="db-bar" style="height:38%;background:#D4C9B8"></div><div class="db-bar-month">Dic</div></div>
+                <div class="db-bar-wrap"><div class="db-bar" style="height:48%;background:#D4C9B8"></div><div class="db-bar-month">Gen</div></div>
+                <div class="db-bar-wrap"><div class="db-bar" style="height:60%;background:#D4C9B8"></div><div class="db-bar-month">Feb</div></div>
+                <div class="db-bar-wrap"><div class="db-bar" style="height:72%;background:#D4C9B8"></div><div class="db-bar-month">Mar</div></div>
+                <div class="db-bar-wrap"><div class="db-bar" id="bar-current" style="height:90%;background:#4A6FA5"></div><div class="db-bar-month" id="bar-current-label">Apr</div></div>
+              </div>
+            </div>
+            <div class="db-chart-card">
+              <div class="db-chart-label">Prossime scadenze</div>
+              <div class="db-scad-list">
+                <div class="db-scad-item urgent">
+                  <div><div class="db-scad-name" id="sc1-name">Birra Moretti srl</div><div class="db-scad-date" id="sc1-date">15 apr · urgente</div></div>
+                  <div class="db-scad-amt">€ 840</div>
+                </div>
+                <div class="db-scad-item ok">
+                  <div><div class="db-scad-name">Mulino Caputo</div><div class="db-scad-date" id="sc2-date">22 apr</div></div>
+                  <div class="db-scad-amt">€ 1.240</div>
+                </div>
+                <div class="db-scad-item">
+                  <div><div class="db-scad-name">Affitto locale</div><div class="db-scad-date" id="sc3-date">30 apr</div></div>
+                  <div class="db-scad-amt">€ 2.800</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SCADENZARIO -->
+        <div class="db-panel" id="panel-scadenzario">
+          <div class="db-content-title">Scadenzario <span id="scad-month-label">Aprile 2026</span></div>
+          <div class="db-scad-list" style="gap:10px">
+            <div class="db-scad-item urgent" style="padding:12px 14px">
+              <div><div class="db-scad-name" style="font-size:12px">Birra Moretti srl — Fatt. 2026/041</div><div class="db-scad-date">Scadenza 15 apr · Bonifico · URGENTE</div></div>
+              <div class="db-scad-amt" style="font-size:20px">€ 840</div>
+            </div>
+            <div class="db-scad-item ok" style="padding:12px 14px">
+              <div><div class="db-scad-name" style="font-size:12px">Mulino Caputo — Fatt. 2026/038</div><div class="db-scad-date">Scadenza 22 apr · Bonifico</div></div>
+              <div class="db-scad-amt" style="font-size:20px">€ 1.240</div>
+            </div>
+            <div class="db-scad-item" style="padding:12px 14px">
+              <div><div class="db-scad-name" style="font-size:12px">Affitto locale — Canone aprile</div><div class="db-scad-date">Scadenza 30 apr · Bonifico</div></div>
+              <div class="db-scad-amt" style="font-size:20px">€ 2.800</div>
+            </div>
+            <div class="db-scad-item" style="padding:12px 14px; border-left-color:#4A6FA5">
+              <div><div class="db-scad-name" style="font-size:12px">Cliente Rossi Mario — Fatt. 2026/022</div><div class="db-scad-date">Da incassare entro 30 apr</div></div>
+              <div class="db-scad-amt" style="font-size:20px; color:#4A6FA5">+ € 1.800</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- MAGAZZINO -->
+        <div class="db-panel" id="panel-magazzino">
+          <div class="db-content-title">Magazzino <span>aggiornato oggi</span></div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:8px;padding:8px 10px;background:white;border:1px solid var(--border)">
+              <span style="font-size:10px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted)">Articolo</span>
+              <span style="font-size:10px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted)">Giacenza</span>
+              <span style="font-size:10px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted)">Minimo</span>
+              <span style="font-size:10px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted)">Stato</span>
+            </div>
+            <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:8px;padding:10px;background:var(--sand);border:1px solid var(--border)">
+              <span style="font-size:12px">Farina 00 (kg)</span>
+              <span style="font-size:12px">48 kg</span>
+              <span style="font-size:12px;color:var(--muted)">20 kg</span>
+              <span style="font-size:11px;color:#2E7D52;font-weight:500">✓ OK</span>
+            </div>
+            <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:8px;padding:10px;background:#FFF8EC;border:1px solid #E8C96A">
+              <span style="font-size:12px">Mozzarella (kg)</span>
+              <span style="font-size:12px">6 kg</span>
+              <span style="font-size:12px;color:var(--muted)">8 kg</span>
+              <span style="font-size:11px;color:#7A5C00;font-weight:500">⚠ Sotto min.</span>
+            </div>
+            <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:8px;padding:10px;background:var(--sand);border:1px solid var(--border)">
+              <span style="font-size:12px">Pomodoro (lt)</span>
+              <span style="font-size:12px">32 lt</span>
+              <span style="font-size:12px;color:var(--muted)">10 lt</span>
+              <span style="font-size:11px;color:#2E7D52;font-weight:500">✓ OK</span>
+            </div>
+            <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:8px;padding:10px;background:#FEF5F5;border:1px solid #F09595">
+              <span style="font-size:12px">Olio EVO (lt)</span>
+              <span style="font-size:12px">2 lt</span>
+              <span style="font-size:12px;color:var(--muted)">5 lt</span>
+              <span style="font-size:11px;color:#A32D2D;font-weight:500">✗ Critico</span>
+            </div>
+            <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:8px;padding:10px;background:var(--sand);border:1px solid var(--border)">
+              <span style="font-size:12px">Birra (casse)</span>
+              <span style="font-size:12px">14 casse</span>
+              <span style="font-size:12px;color:var(--muted)">5 casse</span>
+              <span style="font-size:11px;color:#2E7D52;font-weight:500">✓ OK</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ANOMALIE -->
+        <div class="db-panel" id="panel-anomalie">
+          <div class="db-content-title">Anomalie prezzi <span>rilevate automaticamente</span></div>
+          <div class="db-alert-card">
+            <div class="db-alert-title">⚠ AUMENTO PREZZO — Birra Moretti srl</div>
+            <div class="db-alert-body">Fatt. 2026/041 del 10 apr · Prezzo concordato: € 28,00/cassa · Prezzo fatturato: € 33,20/cassa · Differenza: +18,6% · Importo extra: € 157,60</div>
+          </div>
+          <div class="db-alert-card">
+            <div class="db-alert-title">⚠ AUMENTO PREZZO — Latteria Campana</div>
+            <div class="db-alert-body">Fatt. 2026/039 del 8 apr · Prezzo concordato: € 6,40/kg · Prezzo fatturato: € 7,10/kg · Differenza: +10,9% · Importo extra: € 84,00</div>
+          </div>
+          <div style="padding:12px 16px;border-left:2px solid #2E7D52;background:#F0F8F4;margin-top:4px">
+            <div style="font-size:10px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:#2E7D52;margin-bottom:4px">Come funziona</div>
+            <div style="font-size:11px;color:#3A6A4A;line-height:1.6">Correlatio confronta ogni fattura passiva con il listino prezzi concordato con il fornitore. Qualsiasi scostamento viene segnalato immediatamente, prima che tu paghi.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="db-cta">
+    <a href="https://correlatio.it#waitlist">Inizia la tua prova gratuita →</a>
+    <p>30 giorni gratuiti · Nessuna carta di credito · Dati sul tuo Mac</p>
+  </div>
+</section>
+
+<script>
+  var months = [
+    {
+      label: 'Aprile 2026',
+      short: 'Apr',
+      fatt: '€ 22.840', fatt_d: '▲ +8% vs marzo', fatt_d_col: '#2E7D52',
+      inc: '€ 4.600', pag: '€ 6.120', pag_d: '2 in scadenza',
+      saldo: '€ 11.340',
+      sc1: '15 apr · urgente', sc2: '22 apr', sc3: '30 apr',
+      barH: '90%'
+    },
+    {
+      label: 'Maggio 2026',
+      short: 'Mag',
+      fatt: '€ 26.110', fatt_d: '▲ +14% vs aprile', fatt_d_col: '#2E7D52',
+      inc: '€ 3.200', pag: '€ 7.440', pag_d: '3 in scadenza',
+      saldo: '€ 14.820',
+      sc1: '12 mag · urgente', sc2: '20 mag', sc3: '31 mag',
+      barH: '100%'
+    },
+    {
+      label: 'Giugno 2026',
+      short: 'Giu',
+      fatt: '€ 19.500', fatt_d: '▼ -25% vs maggio', fatt_d_col: '#E24B4A',
+      inc: '€ 5.800', pag: '€ 4.900', pag_d: '1 in scadenza',
+      saldo: '€ 9.640',
+      sc1: '10 giu · urgente', sc2: '18 giu', sc3: '30 giu',
+      barH: '75%'
+    }
+  ];
+
+  var currentMonth = 0;
+
+  function setMonth(idx, btn) {
+    currentMonth = idx;
+    var m = months[idx];
+    document.querySelectorAll('.db-tab').forEach(function(t) { t.classList.remove('active'); });
+    btn.classList.add('active');
+
+    document.getElementById('dash-month-label').textContent = m.label;
+    document.getElementById('scad-month-label').textContent = m.label;
+    document.getElementById('kpi-fatt').textContent = m.fatt;
+    document.getElementById('kpi-fatt-d').textContent = m.fatt_d;
+    document.getElementById('kpi-fatt-d').style.color = m.fatt_d_col;
+    document.getElementById('kpi-inc').textContent = m.inc;
+    document.getElementById('kpi-pag').textContent = m.pag;
+    document.getElementById('kpi-pag-d').textContent = m.pag_d;
+    document.getElementById('kpi-saldo').textContent = m.saldo;
+    document.getElementById('sc1-date').textContent = m.sc1;
+    document.getElementById('sc2-date').textContent = m.sc2;
+    document.getElementById('sc3-date').textContent = m.sc3;
+    document.getElementById('bar-current').style.height = m.barH;
+    document.getElementById('bar-current-label').textContent = m.short;
+  }
+
+  function setPanel(name, el) {
+    document.querySelectorAll('.db-nav-item').forEach(function(n) { n.classList.remove('active'); });
+    document.querySelectorAll('.db-panel').forEach(function(p) { p.classList.remove('active'); });
+    el.classList.add('active');
+    document.getElementById('panel-' + name).classList.add('active');
+  }
+</script>
