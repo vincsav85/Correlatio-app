@@ -1941,22 +1941,22 @@
         <label>Ingredienti e costi (€ per porzione)</label>
         <ul class="fc-ing-list" id="ing-list">
           <li class="fc-ing-row">
-            <input class="ing-name" type="text" placeholder="Ingrediente" oninput="calc()">
-            <input class="ing-cost" type="number" min="0" step="0.01" placeholder="€" oninput="calc()">
-            <button class="ing-del" onclick="delIng(this)">×</button>
+            <input class="ing-name" type="text" placeholder="Ingrediente" oninput="fcCalc()">
+            <input class="ing-cost" type="number" min="0" step="0.01" placeholder="€" oninput="fcCalc()">
+            <button class="ing-del" onclick="fcDelIng(this)">×</button>
           </li>
           <li class="fc-ing-row">
-            <input class="ing-name" type="text" placeholder="Ingrediente" oninput="calc()">
-            <input class="ing-cost" type="number" min="0" step="0.01" placeholder="€" oninput="calc()">
-            <button class="ing-del" onclick="delIng(this)">×</button>
+            <input class="ing-name" type="text" placeholder="Ingrediente" oninput="fcCalc()">
+            <input class="ing-cost" type="number" min="0" step="0.01" placeholder="€" oninput="fcCalc()">
+            <button class="ing-del" onclick="fcDelIng(this)">×</button>
           </li>
           <li class="fc-ing-row">
-            <input class="ing-name" type="text" placeholder="Ingrediente" oninput="calc()">
-            <input class="ing-cost" type="number" min="0" step="0.01" placeholder="€" oninput="calc()">
-            <button class="ing-del" onclick="delIng(this)">×</button>
+            <input class="ing-name" type="text" placeholder="Ingrediente" oninput="fcCalc()">
+            <input class="ing-cost" type="number" min="0" step="0.01" placeholder="€" oninput="fcCalc()">
+            <button class="ing-del" onclick="fcDelIng(this)">×</button>
           </li>
         </ul>
-        <button class="fc-add-btn" onclick="addIng()">+ Aggiungi ingrediente</button>
+        <button class="fc-add-btn" onclick="fcAddIng()">+ Aggiungi ingrediente</button>
 
         <div class="fc-correlatio-note">
           <p class="cn-label">Con Correlatio</p>
@@ -1968,7 +1968,7 @@
         <label>Prezzo di vendita</label>
         <div class="fc-price-wrap">
           <span class="sym">€</span>
-          <input type="number" id="sell-price" min="0" step="0.01" placeholder="0.00" oninput="calc()">
+          <input type="number" id="sell-price" min="0" step="0.01" placeholder="0.00" oninput="fcCalc()">
         </div>
       </div>
     </div>
@@ -2015,7 +2015,7 @@
 </section>
 
 <script>
-  function calc() {
+  function fcCalc() {
     var rows = document.querySelectorAll('#ing-list .fc-ing-row');
     var total = 0;
     rows.forEach(function(r) {
@@ -2068,14 +2068,14 @@
     }
   }
 
-  function addIng() {
+  function fcAddIng() {
     var li = document.createElement('li');
     li.className = 'fc-ing-row';
-    li.innerHTML = '<input class="ing-name" type="text" placeholder="Ingrediente" oninput="calc()"><input class="ing-cost" type="number" min="0" step="0.01" placeholder="€" oninput="calc()"><button class="ing-del" onclick="delIng(this)">×</button>';
+    li.innerHTML = '<input class="ing-name" type="text" placeholder="Ingrediente" oninput="fcCalc()"><input class="ing-cost" type="number" min="0" step="0.01" placeholder="€" oninput="fcCalc()"><button class="ing-del" onclick="fcDelIng(this)">×</button>';
     document.getElementById('ing-list').appendChild(li);
   }
 
-  function delIng(btn) {
+  function fcDelIng(btn) {
     var rows = document.querySelectorAll('#ing-list .fc-ing-row');
     if (rows.length > 1) {
       btn.closest('.fc-ing-row').remove();
@@ -2270,7 +2270,7 @@
     { nome: 'Enterprise · € 129', costo: 129, note: 'Tutto Pro + Food Cost, HR, multi-sede' }
   ];
 
-  function calc() {
+  function rsCalc() {
     var fatt  = parseInt(document.getElementById('sl-fatt').value);
     var mag   = parseInt(document.getElementById('sl-mag').value);
     var ora   = parseInt(document.getElementById('sl-ora').value);
@@ -2319,7 +2319,7 @@
     document.getElementById('roi-mult').textContent = roi > 0 ? roi.toFixed(1) : '—';
   }
 
-  calc();
+  rsCalc();
 </script>
 
 <div class="divider"></div>
