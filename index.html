@@ -169,6 +169,21 @@
 
   .waitlist-form button:hover { background: var(--ink); border-color: var(--ink); }
 
+  .btn-download {
+    display: inline-block;
+    padding: 18px 40px;
+    font-family: 'Jost', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    background: var(--accent);
+    color: white;
+    text-decoration: none;
+    transition: all 0.2s;
+    box-shadow: 0 4px 24px rgba(74,111,165,0.25);
+  }
+  .btn-download:hover { background: var(--ink); box-shadow: none; }
+
   .form-note {
     font-size: 11px;
     color: var(--muted);
@@ -2165,7 +2180,7 @@
           <label>Fatture passive al mese</label>
           <span class="rs-field-val" id="val-fatt"><span id="v-fatt">20</span> fatture</span>
         </div>
-        <input type="range" id="sl-fatt" min="5" max="100" step="5" value="20" oninput="calc()">
+        <input type="range" id="sl-fatt" min="5" max="100" step="5" value="20" oninput="rsCalc()">
         <div class="rs-field-note">Ogni fattura passiva richiede ~15 min di registrazione manuale</div>
       </div>
 
@@ -2174,7 +2189,7 @@
           <label>Articoli a magazzino</label>
           <span class="rs-field-val" id="val-mag"><span id="v-mag">40</span> articoli</span>
         </div>
-        <input type="range" id="sl-mag" min="10" max="200" step="10" value="40" oninput="calc()">
+        <input type="range" id="sl-mag" min="10" max="200" step="10" value="40" oninput="rsCalc()">
         <div class="rs-field-note">Il controllo scorte manuale richiede ~30 min a settimana per ogni 20 articoli</div>
       </div>
 
@@ -2183,7 +2198,7 @@
           <label>Il tuo costo orario</label>
           <span class="rs-field-val">€ <span id="v-ora">25</span>/ora</span>
         </div>
-        <input type="range" id="sl-ora" min="15" max="80" step="5" value="25" oninput="calc()">
+        <input type="range" id="sl-ora" min="15" max="80" step="5" value="25" oninput="rsCalc()">
         <div class="rs-field-note">Stima il valore della tua ora di lavoro</div>
       </div>
 
@@ -2192,7 +2207,7 @@
           <label>Piano Correlatio</label>
           <span class="rs-field-val" id="val-piano">Starter · € 29</span>
         </div>
-        <input type="range" id="sl-piano" min="0" max="2" step="1" value="0" oninput="calc()">
+        <input type="range" id="sl-piano" min="0" max="2" step="1" value="0" oninput="rsCalc()">
         <div class="rs-field-note" id="piano-note">Dashboard, fatture, SDI, scadenzario</div>
       </div>
 
@@ -2331,11 +2346,11 @@
   <p class="hero-sub" style="margin: 16px auto 48px;">
     Unisciti alla lista di attesa. I primi 50 iscritti ricevono<br>1 mese gratuito e accesso prioritario al lancio.
   </p>
-  <form class="waitlist-form" style="margin: 0 auto;" action="https://formspree.io/f/xlgvdgqr" method="POST">
-    <input type="email" name="email" placeholder="La tua email" required>
-    <button type="submit">Voglio il mese gratuito</button>
-  </form>
-  <p class="form-note" style="margin-top:12px;">Già <strong>—</strong> persone in lista · Accesso anticipato gratuito</p>
+  <a href="https://github.com/vincsav85/correlatio-desktop/releases/download/v1.0.0/Correlatio-Windows.zip"
+     class="btn-download" style="display:inline-block; margin: 0 auto;">
+    ↓ &nbsp;Scarica Correlatio per Windows
+  </a>
+  <p class="form-note" style="margin-top:16px;">Versione 1.0.0 · Windows 10/11 · 53 MB · Prova gratuita 30 giorni · Nessuna carta di credito</p>
 </section>
 
 <!-- FOOTER -->
