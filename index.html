@@ -1527,6 +1527,117 @@
     line-height: 1.7;
   }
 
+
+  /* ── CONFRONTO ── */
+  .confronto-section {
+    padding: 100px 40px;
+    background: var(--sand2);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .confronto-inner {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .confronto-table {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 24px;
+  }
+
+  .confronto-col {
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .confronto-col-header {
+    font-family: 'Jost', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 16px 24px;
+    text-align: center;
+  }
+
+  .confronto-col-generic .confronto-col-header {
+    background: #E8E4DC;
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  .confronto-col-correlatio {
+    box-shadow: 0 8px 32px rgba(74,111,165,0.18);
+    transform: scale(1.03);
+    position: relative;
+    z-index: 2;
+  }
+
+  .confronto-col-correlatio .confronto-col-header {
+    background: var(--accent);
+    color: white;
+    font-size: 15px;
+    padding: 20px 24px;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    letter-spacing: 0.05em;
+    font-size: 18px;
+  }
+
+  .confronto-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .confronto-list li {
+    padding: 14px 24px;
+    font-size: 14px;
+    font-weight: 300;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .confronto-col-generic .confronto-list li {
+    background: #F9F7F4;
+    color: var(--muted);
+    font-size: 13px;
+    text-decoration: line-through;
+    text-decoration-color: #E05C5C44;
+  }
+
+  .confronto-col-correlatio .confronto-list li {
+    background: white;
+    color: var(--ink);
+    font-size: 15px;
+    font-weight: 400;
+    padding: 16px 24px;
+  }
+
+  .confronto-no::before {
+    content: "✕";
+    color: #E05C5C;
+    font-size: 12px;
+    flex-shrink: 0;
+  }
+
+  .confronto-si::before {
+    content: "✓";
+    color: #4CAF87;
+    font-weight: 700;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 640px) {
+    .confronto-table { grid-template-columns: 1fr; }
+  }
+
 </style>
 <script type="text/javascript" src="https://embeds.iubenda.com/widgets/b7419100-9c5b-41eb-b6dc-e34df5f8e787.js"></script>
 </head>
@@ -2109,6 +2220,48 @@
 </script>
 
 <div class="divider"></div>
+<!-- CONFRONTO -->
+<section class="confronto-section">
+  <div class="confronto-inner">
+    <p class="section-eyebrow" style="text-align:center;">Perché Correlatio</p>
+    <h2 class="section-title" style="text-align:center;">Stanco del gestionale<br><em>che non ti capisce?</em></h2>
+    <p class="section-intro" style="text-align:center; margin: 0 auto 48px;">
+      I gestionali generici vanno bene per tutti — e quindi non vanno bene per nessuno.<br>
+      Correlatio è stato progettato da zero per i ristoratori italiani.
+    </p>
+
+    <div class="confronto-table">
+      <div class="confronto-col confronto-col-generic">
+        <div class="confronto-col-header">Gestionale generico</div>
+        <ul class="confronto-list">
+          <li class="confronto-no">Prezzo che aumenta ogni anno</li>
+          <li class="confronto-no">Abbonamento annuale vincolante</li>
+          <li class="confronto-no">Assistenza solo via chat</li>
+          <li class="confronto-no">Magazzino non pensato per il food</li>
+          <li class="confronto-no">Nessun food cost integrato</li>
+          <li class="confronto-no">Nessun alert anomalie fornitori</li>
+          <li class="confronto-no">Dashboard generica</li>
+          <li class="confronto-no">Pensato per qualsiasi azienda</li>
+        </ul>
+      </div>
+
+      <div class="confronto-col confronto-col-correlatio">
+        <div class="confronto-col-header">Correlatio</div>
+        <ul class="confronto-list">
+          <li class="confronto-si">Prezzo fisso e trasparente</li>
+          <li class="confronto-si">Mensile — disdici quando vuoi</li>
+          <li class="confronto-si">Assistenza diretta via email</li>
+          <li class="confronto-si">Magazzino progettato per i ristoranti</li>
+          <li class="confronto-si">Food Cost integrato (piano Enterprise)</li>
+          <li class="confronto-si">Alert automatici sui prezzi fornitori</li>
+          <li class="confronto-si">Dashboard pensata per il tuo locale</li>
+          <li class="confronto-si">Fatto solo per i ristoratori italiani</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- PRICING -->
 <section class="section">
   <div class="reveal">
